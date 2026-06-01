@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Guide - Data Guardian</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, sans-serif; color: #333; line-height: 1.8; }
+        
+        /* Navigation */
+        nav { background: #fff; padding: 15px 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+        nav .logo { font-size: 22px; font-weight: 700; color: #4A90E2; text-decoration: none; }
+        nav .logo span { color: #4CAF50; }
+        nav ul { list-style: none; display: flex; gap: 25px; align-items: center; margin: 0; padding: 0; }
+        nav ul li { display: inline; }
+        nav ul li a { text-decoration: none; color: #555; font-weight: 500; font-size: 14px; transition: color 0.3s; }
+        nav ul li a:hover { color: #4A90E2; }
+        nav ul li a.active { color: #4A90E2; font-weight: 700; border-bottom: 2px solid #4A90E2; padding-bottom: 3px; }
+        nav .cta-btn { background: #4A90E2; color: #fff !important; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 13px; }
+        .hamburger { display: none; cursor: pointer; font-size: 28px; background: none; border: none; color: #333; padding: 5px 10px; }
+        .hamburger:hover { color: #4A90E2; }
+        @media (max-width: 768px) {
+            nav { flex-wrap: wrap; padding: 12px 20px; }
+            .hamburger { display: block; }
+            nav ul { display: none; width: 100%; flex-direction: column; gap: 0; padding-top: 15px; margin-top: 12px; border-top: 1px solid #eee; }
+            nav ul.show { display: flex; }
+            nav ul li { padding: 12px 0; border-bottom: 1px solid #f5f5f5; text-align: center; }
+            nav ul li a { display: block; padding: 5px 0; font-size: 15px; }
+        }
+        
+        /* Hero */
+        .hero { background: linear-gradient(135deg, #4A90E2, #357ABD); color: #fff; padding: 60px 30px; text-align: center; }
+        .hero h1 { font-size: 32px; margin-bottom: 10px; }
+        .hero p { font-size: 16px; opacity: 0.9; }
+        
+        /* Layout */
+        .guide-layout { display: flex; max-width: 1200px; margin: 0 auto; gap: 30px; padding: 30px; }
+        
+        /* Sidebar */
+        .sidebar { width: 260px; min-width: 260px; position: sticky; top: 80px; height: fit-content; background: #fff; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 20px; }
+        .sidebar h3 { font-size: 14px; color: #4A90E2; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .sidebar a { display: block; padding: 8px 12px; color: #555; text-decoration: none; font-size: 13px; border-radius: 6px; margin-bottom: 3px; transition: all 0.2s; }
+        .sidebar a:hover { background: #f0f4f8; color: #4A90E2; }
+        .sidebar a.active-side { background: #E8F0FE; color: #4A90E2; font-weight: 600; }
+        
+        /* Content */
+        .content { flex: 1; min-width: 0; }
+        .section { background: #fff; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 30px; margin-bottom: 25px; }
+        .section h2 { font-size: 22px; color: #2C3E50; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #eee; }
+        .section h3 { font-size: 17px; color: #4A90E2; margin: 20px 0 10px; }
+        .section h4 { font-size: 15px; color: #555; margin: 15px 0 8px; }
+        .section p { margin-bottom: 12px; color: #555; font-size: 14px; }
+        .section ul, .section ol { margin: 10px 0 15px 25px; }
+        .section ul li, .section ol li { margin-bottom: 8px; font-size: 14px; color: #555; }
+        
+        /* Info boxes */
+        .info-box { padding: 15px 20px; border-radius: 8px; margin: 15px 0; font-size: 14px; }
+        .info-box.tip { background: #E8F5E9; border-left: 4px solid #4CAF50; }
+        .info-box.warning { background: #FFF9C4; border-left: 4px solid #FFC107; }
+        .info-box.note { background: #E3F2FD; border-left: 4px solid #2196F3; }
+        .info-box strong { display: block; margin-bottom: 5px; }
+        
+        /* Steps */
+        .step-list { counter-reset: step; list-style: none; padding: 0; }
+        .step-list li { counter-increment: step; padding: 15px 15px 15px 60px; position: relative; margin-bottom: 10px; background: #f8f9fa; border-radius: 8px; font-size: 14px; }
+        .step-list li::before { content: counter(step); position: absolute; left: 15px; top: 15px; width: 32px; height: 32px; background: #4A90E2; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
+        
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 13px; }
+        th, td { padding: 10px 12px; border: 1px solid #e0e0e0; text-align: left; }
+        th { background: #f0f4f8; font-weight: 600; }
+        
+        /* Score badges */
+        .score-excellent { color: #4CAF50; font-weight: 700; }
+        .score-good { color: #8BC34A; font-weight: 700; }
+        .score-fair { color: #FFC107; font-weight: 700; }
+        .score-poor { color: #FF9800; font-weight: 700; }
+        .score-critical { color: #F44336; font-weight: 700; }
+        
+        /* Footer */
+        footer { background: #2C3E50; color: #aaa; padding: 30px; text-align: center; font-size: 13px; margin-top: 40px; }
+        footer a { color: #ccc; text-decoration: none; }
+        footer a:hover { color: #fff; }
+        
+        @media (max-width: 900px) {
+            .guide-layout { flex-direction: column; padding: 15px; }
+            .sidebar { width: 100%; min-width: auto; position: static; }
+            .sidebar a { display: inline-block; margin: 2px; font-size: 12px; padding: 6px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+    <a href="index.html" class="logo">Data <span>Guardian</span></a>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">☰</button>
+    <ul id="navMenu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="guide.html" class="active">User Guide</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="privacy.html">Privacy</a></li>
+        <li><a href="terms.html">Terms</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="#" class="cta-btn">🚀 Install Now</a></li>
+    </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+    <h1>📖 User Guide</h1>
+    <p>Everything you need to know about Data Guardian</p>
+</section>
+
+<!-- Main Layout -->
+<div class="guide-layout">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h3>📑 Contents</h3>
+        <a href="#getting-started">Getting Started</a>
+        <a href="#installation">Installation</a>
+        <a href="#health-scores">Understanding Health Scores</a>
+        <a href="#email-validation">Email Validation</a>
+        <a href="#address-verification">Address Verification</a>
+        <a href="#phone-validation">Phone Validation</a>
+        <a href="#account-validation">Account Validation</a>
+        <a href="#task-automation">Task Automation</a>
+        <a href="#reports">Reports</a>
+        <a href="#related-list">Related List Reports</a>
+        <a href="#settings">Settings</a>
+        <a href="#custom-fields">Custom Fields</a>
+        <a href="#troubleshooting">Troubleshooting</a>
+        <a href="#faq">FAQ</a>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="content">
+        
+        <!-- Getting Started -->
+        <div class="section" id="getting-started">
+            <h2>🚀 Getting Started</h2>
+            <p>Data Guardian is a Zoho CRM Sigma Extension that automatically scores, verifies, and monitors your CRM data quality. It works across <strong>Leads, Contacts, Accounts, and Deals</strong> modules.</p>
+            
+            <h3>What It Does</h3>
+            <ul>
+                <li><strong>Health Scoring:</strong> Calculates a 0-100% score based on field completeness</li>
+                <li><strong>Email Validation:</strong> Verifies emails via external API</li>
+                <li><strong>Address Verification:</strong> Validates addresses via API</li>
+                <li><strong>Phone Validation:</strong> Checks phone format for 60+ countries</li>
+                <li><strong>Account Validation:</strong> Verifies business registration numbers</li>
+                <li><strong>Task Automation:</strong> Creates tasks for records needing attention</li>
+                <li><strong>Reports:</strong> Weekly & monthly consolidated reports</li>
+            </ul>
+            
+            <h3>Supported Modules</h3>
+            <table>
+                <tr><th>Module</th><th>Health Score</th><th>Email</th><th>Address</th><th>Phone</th><th>Business Details</th></tr>
+                <tr><td>Leads</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>-</td></tr>
+                <tr><td>Contacts</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>-</td></tr>
+                <tr><td>Accounts</td><td>✅</td><td>-</td><td>✅</td><td>✅</td><td>✅</td></tr>
+                <tr><td>Deals</td><td>✅</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+            </table>
+        </div>
+        
+        <!-- Installation -->
+        <div class="section" id="installation">
+            <h2>🔧 Installation</h2>
+            
+            <h3>Step-by-Step Setup</h3>
+            <ol class="step-list">
+                <li><strong>Install from Marketplace:</strong> Go to Zoho CRM Marketplace, search "Data Guardian", and click Install.</li>
+                <li><strong>Create Custom Fields:</strong> The extension requires specific custom fields. See the <a href="#custom-fields">Custom Fields</a> section below.</li>
+                <li><strong>Configure API Keys:</strong> Add your email validation and address verification API keys in the extension settings.</li>
+                <li><strong>Set Up Workflows:</strong> Configure workflow rules to trigger health checks on record create/edit.</li>
+                <li><strong>Verify Installation:</strong> Update any Lead, Contact, or Account record to see the health score appear.</li>
+            </ol>
+            
+            <div class="info-box tip">
+                <strong>💡 Tip:</strong> After installation, update a few records to verify everything is working correctly before relying on automated processes.
+            </div>
+        </div>
+        
+        <!-- Health Scores -->
+        <div class="section" id="health-scores">
+            <h2>📊 Understanding Health Scores</h2>
+            <p>The health score is calculated as: <strong>(Filled Fields ÷ Total Fields) × 100</strong></p>
+            
+            <h3>Score Categories</h3>
+            <table>
+                <tr><th>Score Range</th><th>Status</th><th>Meaning</th></tr>
+                <tr><td><span class="score-excellent">80-100%</span></td><td>Excellent</td><td>Data is complete and verified</td></tr>
+                <tr><td><span class="score-good">60-79%</span></td><td>Good</td><td>Minor improvements possible</td></tr>
+                <tr><td><span class="score-fair">40-59%</span></td><td>Fair</td><td>Several fields need attention</td></tr>
+                <tr><td><span class="score-poor">20-39%</span></td><td>Poor</td><td>Major data gaps</td></tr>
+                <tr><td><span class="score-critical">0-19%</span></td><td>Critical</td><td>Immediate action required</td></tr>
+            </table>
+            
+            <h3>Score Deductions</h3>
+            <table>
+                <tr><th>Issue</th><th>Deduction</th></tr>
+                <tr><td>Invalid phone number</td><td>-5 points</td></tr>
+                <tr><td>Invalid mobile number</td><td>-5 points</td></tr>
+                <tr><td>Primary email missing</td><td>-15 points</td></tr>
+                <tr><td>Invalid email (score &lt;40)</td><td>-10 points</td></tr>
+                <tr><td>Account Name missing</td><td>-10 points</td></tr>
+                <tr><td>Account Type missing</td><td>-5 points</td></tr>
+                <tr><td>Account Number invalid</td><td>-5 points</td></tr>
+            </table>
+        </div>
+        
+        <!-- Email Validation -->
+        <div class="section" id="email-validation">
+            <h2>📧 Email Validation</h2>
+            <p>The extension validates both <strong>Primary Email</strong> and <strong>Secondary Email</strong> fields.</p>
+            
+            <h3>Credit-Saving Logic</h3>
+            <p>Once an email is marked as <strong>"Valid"</strong>, it will NOT be re-verified unless the email field changes. This saves API credits.</p>
+            
+            <div class="info-box note">
+                <strong>📝 Note:</strong> If you update an email and want it re-verified, reset the Email Status field to blank first.
+            </div>
+        </div>
+        
+        <!-- Address Verification -->
+        <div class="section" id="address-verification">
+            <h2>🏠 Address Verification</h2>            
+            <h3>Requirements</h3>
+            <p>Address verification requires at minimum: <strong>Zip/Postal Code, City, and Country</strong>.</p>
+            
+            <h3>What It Returns</h3>
+            <ul>
+                <li><strong>Address Status:</strong> Valid, Invalid, or Missing</li>
+                <li><strong>Timezone:</strong> Auto-detected from verified address</li>
+            </ul>
+            
+            <div class="info-box warning">
+                <strong>⚠️ Important:</strong> Phone validation only runs if the address is verified as "Valid" because phone formats depend on country.
+            </div>
+        </div>
+        
+        <!-- Phone Validation -->
+        <div class="section" id="phone-validation">
+            <h2>📞 Phone Validation</h2>
+            <p>Phone numbers are validated against country-specific formats for <strong>60+ countries</strong>.</p>
+            
+            <h3>Validation Flow</h3>
+            <ol>
+                <li>Address must be verified first</li>
+                <li>Country extracted from verified address</li>
+            </ol>
+            
+            <h3>Supported Countries (60+)</h3>
+            <p>Includes: USA, Canada, UK, India, China, Japan, Germany, France, Australia, Brazil, UAE, Saudi Arabia, South Africa, Singapore, and many more.</p>
+        </div>
+        
+        <!-- Account Validation -->
+        <div class="section" id="account-validation">
+            <h2>🔢 Account Validation (Accounts Only)</h2>
+            <p>For the Accounts module, the extension validates:</p>
+            <ul>
+                <li><strong>Account Name:</strong> Not empty, not numbers-only, reasonable length</li>
+                <li><strong>Account Type:</strong> Must match CRM picklist values</li>
+                <li><strong>Account Number:</strong> Validated against 60+ country business registration formats (EIN, VAT, CNPJ, ABN, etc.)</li>
+            </ul>
+        </div>
+        
+        <!-- Task Automation -->
+        <div class="section" id="task-automation">
+            <h2>✅ Task Automation</h2>
+            <p>The extension automatically creates or updates tasks based on health scores.</p>
+            
+            <h3>Task Priority Rules</h3>
+            <table>
+                <tr><th>Health Score</th><th>Task Subject</th><th>Priority</th><th>Status</th></tr>
+                <tr><td>&lt; 20%</td><td>CRITICAL</td><td>Highest</td><td>In Progress</td></tr>
+                <tr><td>20-39%</td><td>URGENT</td><td>High</td><td>In Progress</td></tr>
+                <tr><td>40-59%</td><td>ATTENTION</td><td>Low</td><td>In Progress</td></tr>
+                <tr><td>60-79%</td><td>LOWEST</td><td>Lowest</td><td>In Progress</td></tr>
+                <tr><td>80-89%</td><td>NORMAL</td><td>Normal</td><td>In Progress</td></tr>
+                <tr><td>90-99%</td><td>GOOD</td><td>Normal</td><td>Completed</td></tr>
+                <tr><td>100%</td><td>EXCELLENT</td><td>Normal</td><td>Completed</td></tr>
+            </table>
+            
+            <div class="info-box tip">
+                <strong>💡 Smart Updates:</strong> If a health task already exists for a record, it updates it instead of creating a duplicate.
+            </div>
+        </div>
+        
+        <!-- Reports -->
+        <div class="section" id="reports">
+            <h2>📈 Automated Reports</h2>
+            
+            <h3>Weekly Report (Every Monday)</h3>
+            <p>Covers the previous week. Includes: Leads, Contacts, Accounts, Deals & Tasks summary with new records count.</p>
+            
+            <h3>Monthly Report (1st of Month)</h3>
+            <p>Full CRM health analysis with detailed breakdowns per module, score distributions, and recommendations.</p>
+            
+            <h3>Report Features</h3>
+            <ul>
+                <li>Mobile-responsive HTML email design</li>
+                <li>Color-coded score banners</li>
+                <li>Module summary cards</li>
+                <li>Action recommendations</li>
+                <li>Toggle ON/OFF via Settings</li>
+            </ul>
+        </div>
+        
+        <!-- Related List Reports -->
+        <div class="section" id="related-list">
+            <h2>🔍 Related List Reports</h2>
+            <p>View a quick health overview from any record's related list. Shows:</p>
+            <ul>
+                <li>Health Score with percentage</li>
+                <li>Status message (Excellent, Good, Fair, Poor, Critical)</li>
+                <li>Email validation status</li>
+                <li>Address verification status</li>
+                <li>Phone & Mobile validation status</li>
+                <li>Clickable link to related health task</li>
+            </ul>
+        </div>
+        
+        <!-- Settings -->
+        <div class="section" id="settings">
+            <h2>⚙️ Settings</h2>
+            <p>The Settings widget lets you control which reports run:</p>
+            <ul>
+                <li><strong>Weekly Report:</strong> Toggle ON/OFF</li>
+                <li><strong>Monthly Report:</strong> Toggle ON/OFF</li>
+                <li><strong>Email Verification Report:</strong> Toggle ON/OFF</li>
+            </ul>
+            <p>Default: All reports are <strong>enabled</strong>.</p>
+        </div>
+        
+        <!-- Custom Fields -->
+        <!-- <div class="section" id="custom-fields">
+            <h2>📋 Custom Fields Reference</h2>
+            
+            <h3>Common Fields (All Modules)</h3>
+            <table>
+                <tr><th>Field Label</th><th>API Name</th><th>Type</th></tr>
+                <tr><td>Health Score</td><td>unifieddataguardian__Health_Score</td><td>Number</td></tr>
+                <tr><td>Health Task ID</td><td>unifieddataguardian__Health_Task_ID</td><td>Text</td></tr>
+                <tr><td>Address Verifier</td><td>unifieddataguardian__Address_Verifier</td><td>Text</td></tr>
+                <tr><td>Timezone</td><td>unifieddataguardian__Timezone</td><td>Text</td></tr>
+                <tr><td>Phone Validation</td><td>unifieddataguardian__Phone_Validation</td><td>Text</td></tr>
+                <tr><td>Mobile Validation</td><td>unifieddataguardian__Mobile_Validation</td><td>Text</td></tr>
+            </table>
+            
+            <h3>Leads & Contacts Fields</h3>
+            <table>
+                <tr><th>Field Label</th><th>API Name</th><th>Type</th></tr>
+                <tr><td>Email Status</td><td>unifieddataguardian__Email_Status</td><td>Text</td></tr>
+                <tr><td>Secondary Email Check</td><td>unifieddataguardian__Secondary_Email_Check</td><td>Text</td></tr>
+                <tr><td>Previous Email</td><td>unifieddataguardian__Previous_Email</td><td>Text</td></tr>
+            </table>
+            
+            <h3>Accounts Fields</h3>
+            <table>
+                <tr><th>Field Label</th><th>API Name</th><th>Type</th></tr>
+                <tr><td>Account Name Status</td><td>unifieddataguardian__Account_Name_Status</td><td>Text</td></tr>
+                <tr><td>Account Type Status</td><td>unifieddataguardian__Account_Type_Status</td><td>Text</td></tr>
+                <tr><td>Account Number Status</td><td>unifieddataguardian__Account_Number_Status</td><td>Text</td></tr>
+                <tr><td>Shipping Address Status</td><td>unifieddataguardian__Shipping_Address_Status</td><td>Text</td></tr>
+            </table>
+        </div> -->
+        
+        <!-- FAQ -->
+        <div class="section" id="faq">
+            <h2>❓ Frequently Asked Questions</h2>
+            
+            <h4>Q: How often does the health check run?</h4>
+            <p>A: On every record create/edit. Optional nightly bulk check can be configured.</p>
+          
+            <h4>Q: How do I reset a validation status?</h4>
+            <p>A: Clear the status field (set to blank) on the record. The extension will re-verify on next save.</p>
+            
+        </div>
+        
+    </main>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div style="max-width:900px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+        <span>&copy; 2026 Data Guardian. All rights reserved.</span>
+        <span>
+            <a href="index.html">Home</a> | 
+            <a href="guide.html">User Guide</a> | 
+            <a href="about.html">About</a> | 
+            <a href="privacy.html">Privacy</a> | 
+            <a href="terms.html">Terms</a> | 
+            <a href="contact.html">Contact</a>
+        </span>
+    </div>
+</footer>
+
+<script>
+function toggleMenu() {
+    var menu = document.getElementById('navMenu');
+    if (menu.classList.contains('show')) { menu.classList.remove('show'); }
+    else { menu.classList.add('show'); }
+}
+
+// Highlight current section in sidebar
+window.addEventListener('scroll', function() {
+    var sections = document.querySelectorAll('.section');
+    var links = document.querySelectorAll('.sidebar a');
+    var current = '';
+    sections.forEach(function(section) {
+        var top = section.offsetTop - 100;
+        if (window.scrollY >= top) { current = section.getAttribute('id'); }
+    });
+    links.forEach(function(link) {
+        link.classList.remove('active-side');
+        if (link.getAttribute('href') === '#' + current) { link.classList.add('active-side'); }
+    });
+});
+</script>
+
+</body>
+</html>
