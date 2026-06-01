@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Guardian - Zoho CRM Data Quality Extension</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, sans-serif; color: #333; line-height: 1.6; }
+        
+        /* Navigation */
+        nav { background: #fff; padding: 15px 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+        nav .logo { font-size: 22px; font-weight: 700; color: #4A90E2; text-decoration: none; }
+        nav .logo span { color: #4CAF50; }
+        nav ul { list-style: none; display: flex; gap: 25px; align-items: center; margin: 0; padding: 0; }
+        nav ul li { display: inline; }
+        nav ul li a { text-decoration: none; color: #555; font-weight: 500; font-size: 14px; transition: color 0.3s; }
+        nav ul li a:hover { color: #4A90E2; }
+        nav ul li a.active { color: #4A90E2; font-weight: 700; border-bottom: 2px solid #4A90E2; padding-bottom: 3px; }
+        nav .cta-btn { background: #4A90E2; color: #fff !important; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 13px; transition: background 0.3s; }
+        nav .cta-btn:hover { background: #357ABD; }
+        .hamburger { display: none; cursor: pointer; font-size: 28px; background: none; border: none; color: #333; padding: 5px 10px; line-height: 1; }
+        .hamburger:hover { color: #4A90E2; }
+        @media (max-width: 768px) {
+            nav { flex-wrap: wrap; padding: 12px 20px; }
+            .hamburger { display: block; }
+            nav ul { display: none; width: 100%; flex-direction: column; gap: 0; padding-top: 15px; margin-top: 12px; border-top: 1px solid #eee; }
+            nav ul.show { display: flex; }
+            nav ul li { padding: 12px 0; border-bottom: 1px solid #f5f5f5; text-align: center; }
+            nav ul li a { display: block; padding: 5px 0; font-size: 15px; }
+            nav .cta-btn { display: inline-block; margin-top: 5px; text-align: center; }
+        }
+        
+        /* Hero */
+        .hero { background: linear-gradient(135deg, #4A90E2, #357ABD); color: #fff; padding: 80px 40px; text-align: center; }
+        .hero h1 { font-size: 42px; margin-bottom: 15px; }
+        .hero p { font-size: 18px; opacity: 0.9; max-width: 600px; margin: 0 auto 30px; }
+        .hero .badge { display: inline-block; background: rgba(255,255,255,0.2); padding: 8px 20px; border-radius: 20px; font-size: 13px; margin-bottom: 20px; }
+        .hero-buttons { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+        .btn-primary { background: #fff; color: #4A90E2; padding: 14px 30px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 15px; }
+        .btn-secondary { background: rgba(255,255,255,0.15); color: #fff; padding: 14px 30px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 15px; border: 2px solid rgba(255,255,255,0.3); }
+        @media (max-width: 600px) { .hero h1 { font-size: 28px; } .hero p { font-size: 15px; } }
+        
+        /* Stats */
+        .stats { display: flex; justify-content: center; gap: 60px; padding: 40px; background: #f8f9fa; flex-wrap: wrap; }
+        .stat-item { text-align: center; }
+        .stat-number { font-size: 36px; font-weight: 700; color: #4A90E2; }
+        .stat-label { font-size: 13px; color: #666; text-transform: uppercase; }
+        
+        /* Features */
+        .features { padding: 80px 40px; max-width: 1200px; margin: 0 auto; }
+        .features h2, .modules h2, .how-it-works h2 { text-align: center; font-size: 32px; margin-bottom: 50px; color: #2C3E50; }
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .feature-card { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-top: 4px solid #4A90E2; transition: transform 0.3s; }
+        .feature-card:hover { transform: translateY(-5px); }
+        .feature-card .icon { font-size: 40px; margin-bottom: 15px; }
+        .feature-card h3 { font-size: 18px; margin-bottom: 10px; color: #2C3E50; }
+        .feature-card p { font-size: 14px; color: #666; }
+        
+        /* Modules */
+        .modules { background: #f0f4f8; padding: 80px 40px; text-align: center; }
+        .module-grid { display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; max-width: 1000px; margin: 0 auto; }
+        .module-card { background: #fff; padding: 25px 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); min-width: 180px; }
+        .module-card .icon { font-size: 35px; margin-bottom: 10px; }
+        .module-card h3 { font-size: 16px; color: #2C3E50; }
+        .module-card p { font-size: 12px; color: #999; }
+        
+        /* How It Works */
+        .how-it-works { padding: 80px 40px; max-width: 1000px; margin: 0 auto; }
+        .steps { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+        .step { flex: 1; min-width: 200px; text-align: center; padding: 20px; }
+        .step-number { width: 50px; height: 50px; background: #4A90E2; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; margin: 0 auto 15px; }
+        .step h4 { margin-bottom: 8px; }
+        .step p { font-size: 13px; color: #666; }
+        
+        /* CTA */
+        .cta-section { background: linear-gradient(135deg, #4CAF50, #388E3C); color: #fff; padding: 80px 40px; text-align: center; }
+        .cta-section h2 { font-size: 32px; margin-bottom: 15px; }
+        .cta-section p { font-size: 16px; opacity: 0.9; margin-bottom: 30px; }
+        
+        /* Footer */
+        footer { background: #2C3E50; color: #ccc; padding: 40px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
+        footer h4 { color: #fff; margin-bottom: 15px; font-size: 15px; }
+        footer a { font-size: 13px; color: #aaa; text-decoration: none; line-height: 2; display: block; }
+        footer a:hover { color: #fff; }
+        .footer-bottom { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 12px; }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+    <a href="index.html" class="logo">Data <span>Guardian</span></a>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">☰</button>
+    <ul id="navMenu">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="privacy.html">Privacy</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="#" class="cta-btn">🚀 Install Now</a></li>
+    </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="badge">🛡️ Zoho CRM Extension</div>
+    <h1>Your CRM Data's Best Guardian</h1>
+    <p>Automatically score, verify, and monitor your Zoho CRM data quality across Leads, Contacts, Accounts & Deals.</p>
+    <div class="hero-buttons">
+        <a href="#" class="btn-primary">🚀 Install Extension</a>
+        <a href="#features" class="btn-secondary">Learn More ↓</a>
+    </div>
+</section>
+
+<!-- Stats -->
+<section class="stats">
+    <div class="stat-item"><div class="stat-number">60+</div><div class="stat-label">Countries</div></div>
+    <div class="stat-item"><div class="stat-number">4</div><div class="stat-label">Modules</div></div>
+    <div class="stat-item"><div class="stat-number">24/7</div><div class="stat-label">Monitoring</div></div>
+    <div class="stat-item"><div class="stat-number">100%</div><div class="stat-label">Automated</div></div>
+</section>
+
+<!-- Features -->
+<section class="features" id="features">
+    <h2>✨ Powerful Features</h2>
+    <div class="feature-grid">
+        <div class="feature-card"><div class="icon">📊</div><h3>Health Scoring</h3><p>Automatic 0-100% data quality scores with color-coded status.</p></div>
+        <div class="feature-card"><div class="icon">📧</div><h3>Email Validation</h3><p>Bulk verification with disposable detection & typo correction.</p></div>
+        <div class="feature-card"><div class="icon">🏠</div><h3>Address Verification</h3><p>Real-time validation with timezone & country auto-correction.</p></div>
+        <div class="feature-card"><div class="icon">📞</div><h3>Phone Validation</h3><p>Country-specific format checking for 60+ countries.</p></div>
+        <div class="feature-card"><div class="icon">✅</div><h3>Task Automation</h3><p>Auto-creates prioritized tasks. No duplicates.</p></div>
+        <div class="feature-card"><div class="icon">📈</div><h3>Auto Reports</h3><p>Weekly & monthly reports with mobile-responsive design.</p></div>
+    </div>
+</section>
+
+<!-- Modules -->
+<section class="modules" id="modules">
+    <h2>📦 Supported Modules</h2>
+    <div class="module-grid">
+        <div class="module-card"><div class="icon">🔵</div><h3>Leads</h3><p>Score, Email, Phone, Address</p></div>
+        <div class="module-card"><div class="icon">🟢</div><h3>Contacts</h3><p>Score, Email, Phone, Address</p></div>
+        <div class="module-card"><div class="icon">🟠</div><h3>Accounts</h3><p>Score, Phone, Address, Details</p></div>
+        <div class="module-card"><div class="icon">🩷</div><h3>Deals</h3><p>Score, Stage Tracking</p></div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="how-it-works" id="how">
+    <h2>⚡ How It Works</h2>
+    <div class="steps">
+        <div class="step"><div class="step-number">1</div><h4>Install</h4><p>One-click from Zoho Marketplace</p></div>
+        <div class="step"><div class="step-number">2</div><h4>Configure</h4><p>Set API keys & fields</p></div>
+        <div class="step"><div class="step-number">3</div><h4>Automate</h4><p>Auto-scores every record</p></div>
+        <div class="step"><div class="step-number">4</div><h4>Improve</h4><p>Review reports & fix gaps</p></div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+    <h2>Ready to Clean Your CRM Data?</h2>
+    <p>Install Data Guardian today and improve your data quality in minutes.</p>
+    <a href="#" class="btn-primary" style="display:inline-block;">🚀 Get Started Free</a>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-grid">
+        <div><h4>Data Guardian</h4><p>Automated data quality management for Zoho CRM.</p></div>
+        <div><h4>Links</h4><a href="index.html">Home</a><a href="about.html">About</a><a href="privacy.html">Privacy</a><a href="contact.html">Contact</a></div>
+        <div><h4>Contact</h4><p>📧 polas.habib@zohomail.com</p><p>🌐 dataguardian.com</p></div>
+    </div>
+    <div class="footer-bottom">&copy; 2026 Data Guardian. All rights reserved.</div>
+</footer>
+
+<script>
+function toggleMenu() {
+    var menu = document.getElementById('navMenu');
+    if (menu.classList.contains('show')) {
+        menu.classList.remove('show');
+    } else {
+        menu.classList.add('show');
+    }
+}
+</script>
+
+</body>
+</html>
